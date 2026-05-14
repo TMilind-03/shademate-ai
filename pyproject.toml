@@ -1,0 +1,19 @@
+[project]
+name = "shademate-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.136.1",
+    "httpx>=0.28.1",
+    "mediapipe>=0.10.35",
+    "numpy>=2.4.4",
+    "opencv-python-headless>=4.13.0.92",
+    "pillow>=12.2.0",
+    "pydantic-settings>=2.14.1",
+    "pypdf>=6.11.0",
+    "pytest>=9.0.3",
+    "python-multipart>=0.0.28",
+    "requests>=2.34.1",
+]

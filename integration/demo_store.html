@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadeMate Demo Store — Shopify Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .product-page {
+            background: white;
+            width: 800px;
+            display: flex;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .product-image {
+            width: 400px;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .product-info {
+            padding: 40px;
+            flex: 1;
+        }
+
+        .brand { color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        h1 { margin: 10px 0; color: #1e293b; font-size: 32px; }
+        .price { font-size: 24px; color: #1e293b; font-weight: 700; margin-bottom: 20px; }
+        
+        .product-form__buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .add-to-cart {
+            background: #1e293b;
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* The ShadeMate Widget will be injected here automatically by widget.js */
+    </style>
+</head>
+<body>
+
+    <div class="product-page">
+        <div class="product-image">
+            <div style="width:200px; height:200px; background:linear-gradient(45deg, #e2e8f0, #cbd5e1); border-radius:50%"></div>
+        </div>
+        <div class="product-info">
+            <div class="brand">Luxe Cosmetics</div>
+            <h1>Pro Liquid Foundation</h1>
+            <div class="price">$42.00</div>
+            <p style="color:#475569; line-height:1.6">A weightless, long-wear foundation with a natural-looking finish that stays fresh for 16 hours.</p>
+
+            <div class="product-form__buttons">
+                <!-- Our widget.js will find this and inject the button above the Buy Now -->
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHADEMATE INTEGRATION -->
+    <!-- In production, data-api would be your Render.com URL -->
+    <script src="widget.js" data-key="test-key-001" data-api="http://localhost:8000"></script>
+
+</body>
+</html>

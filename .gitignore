@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+.venv/
+.python-version
+*.pyc
+
+# Project Specific
+.env
+assets/selfies/
+assets/catalog_processed.json
+assets/face_landmarker.task
+
+# Tooling
+.pytest_cache/
+.ipynb_checkpoints/
