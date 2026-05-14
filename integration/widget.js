@@ -234,6 +234,29 @@
         document.getElementById('sm-camera-view').style.display = 'block';
         document.getElementById('sm-results').style.display = 'none';
         document.getElementById('sm-loader').style.display = 'none';
+        
+        // Remove any old error messages
+        const oldErr = document.getElementById('sm-error-msg');
+        if(oldErr) oldErr.remove();
+    }
+
+    function validateImage(canvas) {
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        
+        let brightness = 0;
+        for (let i = 0; i < data.length; i += 4) {
+            brightness += (data[i] + data[i+1] + data[i+2]) / 3;
+        }
+        const avgBrightness = brightness / (data.length / 4);
+
+        // SRS Standards
+        if (canvas.width < 200 || canvas.height < 200) return "Image resolution too low.";
+        if (avgBrightness < 40) return "Photo is too dark. Please find better lighting.";
+        if (avgBrightness > 230) return "Photo is too bright. Please avoid direct glare.";
+        
+        return null; // Valid
     }
 
     async function captureSelfie() {
@@ -242,6 +265,23 @@
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0);
+
+        // ── NEW: Client-Side Validation ──
+        const error = validateImage(canvas);
+        if (error) {
+            const errDiv = document.createElement('div');
+            errDiv.id = 'sm-error-msg';
+            errDiv.style.color = '#ef4444';
+            errDiv.style.marginTop = '10px';
+            errDiv.style.fontSize = '14px';
+            errDiv.innerHTML = `<strong>⚠️ ${error}</strong>`;
+            
+            const cameraView = document.getElementById('sm-camera-view');
+            const oldErr = document.getElementById('sm-error-msg');
+            if(oldErr) oldErr.remove();
+            cameraView.appendChild(errDiv);
+            return; // Stop here
+        }
 
         // UI Transition
         document.getElementById('sm-camera-view').style.display = 'none';
