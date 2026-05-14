@@ -1,8 +1,28 @@
 # ShadeMate AI Layer 🎨✨
 
+![ShadeMate UI Mockup](assets/shademate_ui_mockup.png)
+
 **Premium Skin Tone Analysis & Complementary Shade Recommendation Engine.**
 
-ShadeMate AI Layer is a high-performance, privacy-first microservice designed to help beauty brands provide perfect shade recommendations. Using MediaPipe and OpenCV, it analyzes user selfies in real-time to detect skin tones and suggest matching products—all without storing any personal data.
+---
+
+## 📐 Architecture & Privacy Flow
+
+ShadeMate is built on a **Zero-Knowledge Architecture**. The merchant's catalog never touches our servers, ensuring 100% data privacy.
+
+```mermaid
+graph TD
+    A[User Selfie] -->|HTTPS| B(ShadeMate AI Layer)
+    B -->|Face Detection| C[MediaPipe FaceMesh]
+    C -->|Skin Sampling| D[OpenCV Analysis]
+    D -->|Color Math| E[Complementary Shade Range]
+    E -->|JSON Response| F[Client-Side JS Widget]
+    G[(Merchant Catalog)] ---|Local Match| F
+    F -->|Result| H[Recommended Products]
+    
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#fff,stroke:#333,stroke-dasharray: 5 5
+```
 
 ---
 
