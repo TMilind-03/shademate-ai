@@ -81,6 +81,15 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
+@app.get("/")
+async def root():
+    return {
+        "message": "Welcome to ShadeMate AI Layer v1.2",
+        "docs": "/docs",
+        "health": "/health"
+    }
+
+
 @app.get("/health", tags=["ops"], summary="Health check")
 async def health():
     """Simple liveness probe — no auth required."""
