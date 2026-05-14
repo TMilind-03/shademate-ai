@@ -313,28 +313,63 @@
         }, 'image/jpeg', 0.8);
     }
 
+    function deltaE(lab1, lab2) {
+        return Math.sqrt(
+            Math.pow(lab1.L - lab2.L, 2) +
+            Math.pow(lab1.A - lab2.A, 2) +
+            Math.pow(lab1.B - lab2.B, 2)
+        );
+    }
+
     function showResults(data) {
         document.getElementById('sm-loader').style.display = 'none';
         const resultsDiv = document.getElementById('sm-results');
         resultsDiv.style.display = 'block';
 
-        const detectedSkin = data.detected_skin;
-        // In a real implementation, we would match against the STORE'S CATALOG here.
-        // For this demo, we'll just show the detected shade and a mock match.
+        const detectedLab = data.detected_skin.lab;
         
+        // 1. Load Client Catalog (Mocked for demo, would be fetched from store in production)
+        const catalog = [
+            { id: "S1", name: "Ivory", hex: "#F6E5D3", lab: {L: 92.1, A: 1.2, B: 9.5} },
+            { id: "S2", name: "Natural Beige", hex: "#E1BC9B", lab: {L: 78.4, A: 6.2, B: 18.5} },
+            { id: "S3", name: "Honey", hex: "#D4A76A", lab: {L: 69.2, A: 5.4, B: 38.1} },
+            { id: "S4", name: "Bronze", hex: "#A17249", lab: {L: 48.2, A: 12.1, B: 24.5} }
+        ];
+
+        // 2. Score everything
+        let scoredProducts = catalog.map(p => {
+            const diff = deltaE(detectedLab, p.lab);
+            const score = Math.max(0, Math.min(100, 100 - diff));
+            return { ...p, score: Math.round(score) };
+        }).sort((a, b) => b.score - a.score);
+
+        // 3. Cascading Threshold Logic
+        let matches = scoredProducts.filter(p => p.score >= 75);
+        let label = "Top Recommendations for You";
+
+        if (matches.length === 0) {
+            matches = scoredProducts.filter(p => p.score >= 55);
+            label = "Suggested Shade Matches";
+        }
+
+        if (matches.length === 0) {
+            matches = scoredProducts.slice(0, 2); // Show top 2 regardless
+            label = "Closest Available Options";
+        }
+
         const matchList = document.getElementById('sm-match-list');
-        matchList.innerHTML = `
+        document.querySelector('#sm-results h3').innerText = label;
+        
+        matchList.innerHTML = matches.map(m => `
             <div class="sm-match-card">
-                <div class="sm-color-swatch" style="background:${detectedSkin.hex}"></div>
-                <div>
-                    <strong style="display:block; font-size:16px;">${detectedSkin.undertone.toUpperCase()} UNDERTONE</strong>
-                    <span style="color:#64748b; font-size:13px;">98% Match to your skin tone</span>
+                <div class="sm-color-swatch" style="background:${m.hex}"></div>
+                <div style="flex:1">
+                    <strong style="display:block; font-size:16px;">${m.name}</strong>
+                    <span style="color:#64748b; font-size:13px;">${m.score}% Color Compatibility</span>
                 </div>
+                <button style="background:#f1f5f9; border:none; padding:8px 12px; border-radius:8px; font-size:12px; cursor:pointer;" onclick="location.href='/products/${m.id}'">View</button>
             </div>
-            <p style="font-size:12px; color:#94a3b8; margin-top:15px; font-style:italic">
-                "We recommend exploring products in our ${detectedSkin.undertone} collection for the most natural finish."
-            </p>
-        `;
+        `).join('');
     }
 
     // --- Initialize ---
